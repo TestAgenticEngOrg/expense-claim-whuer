@@ -1,0 +1,51 @@
+{
+  "version": 3,
+  "permissions": [
+    {
+      "resource": "claims",
+      "component": "expense-api",
+      "description": "Expense claims and their approval",
+      "actions": [
+        { "handle": "read", "description": "The caller's own claims" },
+        { "handle": "submit", "description": "Create and send a claim" },
+        { "handle": "review-team", "description": "The caller's team's claims" },
+        { "handle": "approve", "description": "Approve a submitted claim in the caller's team" },
+        { "handle": "reject", "description": "Reject a submitted claim in the caller's team" }
+      ]
+    },
+    {
+      "resource": "weekly-limit",
+      "component": "expense-api",
+      "description": "The team's weekly expense limit",
+      "actions": [
+        { "handle": "read", "description": "The caller's team's weekly limit" },
+        { "handle": "set", "description": "Set the caller's team's weekly limit" }
+      ]
+    }
+  ],
+  "groups": [
+    { "name": "Managers", "description": "People who manage a team and review its expense claims" }
+  ],
+  "roles": [
+    {
+      "name": "Employee",
+      "description": "Submits and follows their own claims, and sees their team's weekly limit.",
+      "stories": [1, 2, 3, 4, 7, 9],
+      "grants": ["claims:read", "claims:submit", "weekly-limit:read"],
+      "assignTo": ["Employees"]
+    },
+    {
+      "name": "Manager",
+      "description": "Reviews and decides their team's claims, and sets the team's weekly limit.",
+      "stories": [5, 6, 8],
+      "grants": ["claims:review-team", "claims:approve", "claims:reject", "weekly-limit:set"],
+      "assignTo": ["Managers"]
+    }
+  ],
+  "testUsers": [
+    { "username": "test-employee", "roles": ["Employee"] },
+    { "username": "test-employee-2", "roles": ["Employee"] },
+    { "username": "test-manager", "roles": ["Manager"] },
+    { "username": "test-manager-2", "roles": ["Manager"] }
+  ]
+}

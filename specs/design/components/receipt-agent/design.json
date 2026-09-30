@@ -1,0 +1,17 @@
+{
+  "name": "receipt-agent",
+  "type": "ai-agent",
+  "version": "0.1.0",
+  "language": "TypeScript",
+  "buildpack": "docker",
+  "appPath": "receipt-agent",
+  "entrypoint": "deployment/ai-agent",
+  "exposure": "internet",
+  "dependencies": [
+    { "kind": "platform-resource", "name": "user-auth", "resourceType": "thunder-app" },
+    { "kind": "platform-resource", "name": "receipt-agent-db", "resourceType": "postgres-cnpg" }
+  ],
+  "description": "Reads a single uploaded receipt photo per turn and returns its best reading of the amount, date, merchant and category as structured data for the employee to confirm or correct. Calls no other component — it only extracts and returns data, never creates a claim itself. Exposed to the internet and gated on sign-in because expense-webapp calls it directly from the signed-in employee's browser session.",
+  "stories": [2],
+  "skillsPinned": ["agent-building"]
+}

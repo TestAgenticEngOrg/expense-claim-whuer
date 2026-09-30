@@ -1,0 +1,30 @@
+title Expense Claim App
+
+component expense-webapp as "Expense Webapp" web-application
+component expense-api as "Expense API" service
+component receipt-agent as "Receipt Reader Agent" ai-agent
+component limit-agent as "Weekly Limit Agent" ai-agent
+
+component expense-db as "Expense Database" database
+component receipt-agent-db as "Receipt Agent Memory" database
+component limit-agent-db as "Limit Agent Memory" database
+
+east user-auth as "Thunder Auth" identity-server
+south email-service as "Email Service" service
+
+north -> expense-webapp
+
+expense-webapp -> expense-api
+expense-webapp -> receipt-agent
+expense-webapp -> limit-agent
+expense-webapp -> user-auth
+
+expense-api -> user-auth
+expense-api -> expense-db
+expense-api -> email-service
+
+receipt-agent -> user-auth
+receipt-agent -> receipt-agent-db
+
+limit-agent -> user-auth
+limit-agent -> limit-agent-db
