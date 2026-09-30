@@ -1,6 +1,8 @@
 import { useEffect, useState, type JSX } from "react";
 import { Button, PageContent, PageTitle, Stack, TextField, Typography } from "@wso2/oxygen-ui";
-import { Can } from "../authz/gates";
+import { Can, useAuthz } from "../authz/gates";
+import { canCall } from "../authz/core";
+import { OPERATIONS } from "../authz/operations.gen";
 import { expenseApi } from "../api";
 import { sendToAssistant } from "../agent";
 import { parseWeeklyLimitExtraction } from "../parseAgentReply";
@@ -19,10 +21,17 @@ type WeeklyLimit = components["schemas"]["WeeklyLimit"];
  * src/authz/screens.ts's note and the report for this design gap. After a
  * successful Save the display updates from the PUT response itself, which
  * needs no read permission at all.
+ *
+ * The GET is skipped entirely (never fired) when the caller cannot call it:
+ * authz/client.ts's 401 rule sends EVERY refused call to /forbidden, best
+ * effort or not, so actually making this call as a Manager evicted the whole
+ * screen instead of degrading the one widget.
  */
 export function WeeklyLimitPage(): JSX.Element {
+  const { scopes, signedIn } = useAuthz();
+  const canReadCurrent = canCall(OPERATIONS["GET /me/team/weekly-limit"], scopes, signedIn);
   const [current, setCurrent] = useState<WeeklyLimit | null>(null);
-  const [currentUnavailable, setCurrentUnavailable] = useState(false);
+  const [currentUnavailable, setCurrentUnavailable] = useState(!canReadCurrent);
   const [sentence, setSentence] = useState("");
   const [pending, setPending] = useState<{ amountPerWeek: number; currency: string } | null>(null);
   const [interpreting, setInterpreting] = useState(false);
@@ -30,6 +39,10 @@ export function WeeklyLimitPage(): JSX.Element {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!canReadCurrent) {
+      setCurrentUnavailable(true);
+      return;
+    }
     let live = true;
     void expenseApi
       .GET("/me/team/weekly-limit", {})
@@ -44,7 +57,7 @@ export function WeeklyLimitPage(): JSX.Element {
     return () => {
       live = false;
     };
-  }, []);
+  }, [canReadCurrent]);
 
   async function onInterpret(): Promise<void> {
     if (!sentence.trim()) return;

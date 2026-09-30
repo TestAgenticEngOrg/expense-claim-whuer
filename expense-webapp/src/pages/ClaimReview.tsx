@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useState, type JSX } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Box, Button, Chip, PageContent, PageTitle, Stack, TextField, Typography } from "@wso2/oxygen-ui";
-import { Can } from "../authz/gates";
+import { Can, useAuthz } from "../authz/gates";
+import { canCall } from "../authz/core";
+import { OPERATIONS } from "../authz/operations.gen";
 import { expenseApi } from "../api";
 import { currentWeekRange, isDateInRange } from "../week";
 import type { components } from "../generated/expense-api";
@@ -19,10 +21,19 @@ type WeeklyLimit = components["schemas"]["WeeklyLimit"];
  * Manager role does not grant weekly-limit:read (only weekly-limit:set), so
  * this widget renders nothing for a Manager rather than fail: see the report
  * for this design gap, which is the same one WeeklyLimit's own load hits.
+ *
+ * The fetch itself is skipped entirely when the caller cannot call the
+ * operation (checked client-side against the same OPERATIONS table the gate
+ * uses), rather than fired and caught: authz/client.ts's 401 rule treats
+ * EVERY refused call — best-effort widget or not — as a reason to navigate
+ * the whole page to /forbidden, so an uncounted call here silently evicted a
+ * Manager from a screen they otherwise hold every grant to reach.
  */
 export function ClaimReviewPage(): JSX.Element {
   const { claimId } = useParams<{ claimId: string }>();
   const navigate = useNavigate();
+  const { scopes, signedIn } = useAuthz();
+  const canReadWeeklyLimit = canCall(OPERATIONS["GET /me/team/weekly-limit"], scopes, signedIn);
   const [claims, setClaims] = useState<ExpenseClaim[] | null>(null);
   const [weeklyLimit, setWeeklyLimit] = useState<WeeklyLimit | null>(null);
   const [comment, setComment] = useState("");
@@ -45,6 +56,10 @@ export function ClaimReviewPage(): JSX.Element {
   }, []);
 
   useEffect(() => {
+    if (!canReadWeeklyLimit) {
+      setWeeklyLimit(null);
+      return;
+    }
     let live = true;
     void expenseApi
       .GET("/me/team/weekly-limit", {})
@@ -57,7 +72,7 @@ export function ClaimReviewPage(): JSX.Element {
     return () => {
       live = false;
     };
-  }, []);
+  }, [canReadWeeklyLimit]);
 
   const claim = useMemo(() => claims?.find((c) => c.id === claimId) ?? null, [claims, claimId]);
 
