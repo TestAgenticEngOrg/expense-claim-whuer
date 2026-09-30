@@ -1,0 +1,4 @@
+apiVersion = "agentic-engineer/v1"
+name = "expense-claim-whuer"
+createdAt = "2026-09-30T07:48:20Z"
+idea = "i need build an expense claim app, whuer users can submit a receipt as image"
