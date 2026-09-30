@@ -1,0 +1,17 @@
+{
+  "name": "expense-assistant",
+  "type": "ai-agent",
+  "version": "0.1.0",
+  "language": "TypeScript",
+  "buildpack": "docker",
+  "appPath": "expense-assistant",
+  "entrypoint": "deployment/ai-agent",
+  "exposure": "internet",
+  "dependencies": [
+    { "kind": "platform-resource", "name": "user-auth", "resourceType": "thunder-app" },
+    { "kind": "platform-resource", "name": "expense-assistant-db", "resourceType": "postgres-cnpg" }
+  ],
+  "description": "A single-turn extraction agent with two jobs, told apart by what the turn carries: given a receipt photo, it reads the amount, date, merchant and category for an employee's claim; given a plain-language sentence, it reads the weekly amount and currency for a manager's team limit. Calls no other component and stores no business data of its own — expense-webapp sends it one turn and uses the structured reply to pre-fill a form. Exposed to the internet and gated on sign-in because expense-webapp calls it directly from the signed-in user's browser session.",
+  "stories": [2, 8],
+  "skillsPinned": ["agent-building"]
+}

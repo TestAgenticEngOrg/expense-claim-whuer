@@ -7,12 +7,12 @@ the employee confirms it — seeing their team's weekly limit before sending it.
 sequenceDiagram
     actor Employee
     participant expense-webapp
-    participant receipt-agent
+    participant expense-assistant
     participant expense-api
 
     Employee->>expense-webapp: upload receipt photo
-    expense-webapp->>receipt-agent: read receipt photo
-    receipt-agent-->>expense-webapp: amount, date, merchant, category
+    expense-webapp->>expense-assistant: read receipt photo
+    expense-assistant-->>expense-webapp: amount, date, merchant, category
     expense-webapp->>expense-api: get team weekly limit
     expense-api-->>expense-webapp: weekly limit
     Employee->>expense-webapp: confirm/edit details, submit

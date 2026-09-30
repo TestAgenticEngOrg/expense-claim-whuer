@@ -9,11 +9,10 @@
   "exposure": "internet",
   "dependencies": [
     { "kind": "component", "name": "expense-api", "description": "Creates and reviews expense claims and reads the team's weekly limit." },
-    { "kind": "component", "name": "receipt-agent", "description": "Sends the uploaded receipt photo so the claim form can be pre-filled." },
-    { "kind": "component", "name": "limit-agent", "description": "Sends the manager's plain-language weekly limit statement to be interpreted." },
+    { "kind": "component", "name": "expense-assistant", "description": "Sends the uploaded receipt photo to pre-fill a claim, and the manager's plain-language weekly limit statement to be interpreted." },
     { "kind": "platform-resource", "name": "user-auth", "resourceType": "thunder-app" }
   ],
-  "description": "The single-page app both Employees and Managers sign into. Employees photograph and submit expense claims, review agent-prefilled details, and track claim status; Managers review their team's claims, approve or reject them, and set the team's weekly limit in plain language. Holds no business data itself — everything is read from and written to expense-api, receipt-agent and limit-agent.",
+  "description": "The single-page app both Employees and Managers sign into. Employees photograph and submit expense claims, review agent-prefilled details, and track claim status; Managers review their team's claims, approve or reject them, and set the team's weekly limit in plain language. Holds no business data itself — everything is read from and written to expense-api and expense-assistant.",
   "stories": [1, 2, 3, 4, 5, 6, 7, 8, 9],
   "skillsPinned": ["wireframes", "react-webapp", "oxygen-ui-design-system", "thunder-authentication"]
 }
