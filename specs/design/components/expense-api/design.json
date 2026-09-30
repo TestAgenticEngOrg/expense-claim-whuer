@@ -9,10 +9,9 @@
   "exposure": "internet",
   "dependencies": [
     { "kind": "platform-resource", "name": "user-auth", "resourceType": "thunder-app" },
-    { "kind": "platform-resource", "name": "expense-db", "resourceType": "postgres-cnpg" },
-    { "kind": "external", "name": "email-service", "description": "Emails the employee when their claim is approved or rejected." }
+    { "kind": "platform-resource", "name": "expense-db", "resourceType": "postgres-cnpg" }
   ],
-  "description": "Owns expense claims and the team weekly limit. Stores each claim's amount, receipt reference, merchant, date, category and status; lets an employee submit and track their own claims; lets a manager list, approve and reject their team's claims and set/read the team's weekly limit. Does not read receipt images or interpret natural language itself — expense-webapp calls the agents for that and sends this service only the resulting structured values. Exposed to the internet because the browser SPA calls it directly.",
+  "description": "Owns expense claims and the team weekly limit. Stores each claim's amount, receipt reference, merchant, date, category and status; lets an employee submit and track their own claims; lets a manager list, approve and reject their team's claims and set/read the team's weekly limit. Does not read receipt images or interpret natural language itself — expense-webapp calls the agents for that and sends this service only the resulting structured values. Notification of an outcome is in-app: an employee sees the updated status the next time they read their own claims, so this service sends no email. Exposed to the internet because the browser SPA calls it directly.",
   "stories": [1, 3, 4, 5, 6, 7, 8, 9],
   "skillsPinned": ["openapi-conventions", "ballerina", "thunder-authentication", "api-management"]
 }

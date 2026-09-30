@@ -10,7 +10,6 @@ component receipt-agent-db as "Receipt Agent Memory" database
 component limit-agent-db as "Limit Agent Memory" database
 
 east user-auth as "Thunder Auth" identity-server
-south email-service as "Email Service" service
 
 north -> expense-webapp
 
@@ -21,7 +20,6 @@ expense-webapp -> user-auth
 
 expense-api -> user-auth
 expense-api -> expense-db
-expense-api -> email-service
 
 receipt-agent -> user-auth
 receipt-agent -> receipt-agent-db

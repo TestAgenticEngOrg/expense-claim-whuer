@@ -59,8 +59,9 @@ amount, date, merchant and category; the employee confirms or edits the
 result before the claim is submitted.
 - Approval is single-level: a claim's manager approves or rejects it, and that
 decision is final — there is no escalation or second approver. *assumed*
-- Employees are notified by email when their claim is approved or rejected.
-*assumed*
+- Employees are notified in-app: their claims list reflects a claim's
+approved/rejected outcome and manager comment as soon as it's decided. No
+email or other external notification service is used.
 - Manager-of relationships that decide which manager sees which employee's
 claims are drawn from the organization's existing directory groups rather
 than a new field the employee fills in. *assumed*
